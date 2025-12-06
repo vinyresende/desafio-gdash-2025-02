@@ -37,24 +37,27 @@ class OpenMeteoConsumer():
     def __request(self, callback: Callable[[dict], None]):
         """(Private) Método responsável pelas requisições"""
 
-        res = requests.get(self.url, params=self.parameters).json()
+        try:
+            res = requests.get(self.url, params=self.parameters).json()
 
-        payload = {
-            "city_name": self.city_name,
-            "latitude": self.latitude,
-            "longitude": self.longitude,
-            "current": {
-                "time": res["current"]["time"],
-                "temperature": res["current"]["temperature_2m"],
-                "relative_humidity": res["current"]["relative_humidity_2m"],
-                "apparent_temperature": res["current"]["apparent_temperature"],
-                "wind_speed": res["current"]["wind_speed_10m"],
-                "precipitation_probability": res["current"]["precipitation_probability"],
-                "sky_condition": WEATHER_CODES[res["current"]["weathercode"]]
+            payload = {
+                "city_name": self.city_name,
+                "latitude": self.latitude,
+                "longitude": self.longitude,
+                "current": {
+                    "time": res["current"]["time"],
+                    "temperature": res["current"]["temperature_2m"],
+                    "relative_humidity": res["current"]["relative_humidity_2m"],
+                    "apparent_temperature": res["current"]["apparent_temperature"],
+                    "wind_speed": res["current"]["wind_speed_10m"],
+                    "precipitation_probability": res["current"]["precipitation_probability"],
+                    "sky_condition": WEATHER_CODES[res["current"]["weathercode"]]
+                }
             }
-        }
 
-        callback(payload)
+            callback(payload)
+        except Exception as error:
+            print(f"\033[31;1mError: {error}\033[0m")
 
 
     def start(self, callback: Callable[[dict], None]):
