@@ -148,7 +148,7 @@ func (c *Consumer) processMessages(msgs <-chan amqp.Delivery) {
 		err := c.sender.SendToAPI(string(msg.Body))
 
 		if err != nil {
-			log.Fatalf("Erro ao enviar mensagem: %v", err)
+			log.Printf("Erro ao enviar mensagem: %v", err)
 			continue
 		}
 
@@ -157,7 +157,7 @@ func (c *Consumer) processMessages(msgs <-chan amqp.Delivery) {
 		err = msg.Ack(false)
 
 		if err != nil {
-			log.Fatalf("Erro ao ack mensagem: %v", err)
+			log.Printf("Erro ao ack mensagem: %v", err)
 		}
 	}
 }
