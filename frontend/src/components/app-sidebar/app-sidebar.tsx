@@ -37,8 +37,8 @@ export default function AppSidebar() {
                     <SidebarGroupLabel>Páginas</SidebarGroupLabel>
 
                     <SidebarMenu>
-                        {menuItems.map(i => (
-                            <SidebarMenuButton asChild>
+                        {menuItems.map((i, index) => (
+                            <SidebarMenuButton asChild key={index}>
                                 <Link to={i.href}>
                                     <i.icon /> {i.title}
                                 </Link>
