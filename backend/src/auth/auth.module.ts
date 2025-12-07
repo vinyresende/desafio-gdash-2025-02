@@ -11,8 +11,7 @@ import { JWT_SECRET } from 'src/constants'
 	imports: [
 		JwtModule.register({
 			global: true,
-			secret: JWT_SECRET,
-			signOptions: { expiresIn: "60s" }
+			secret: JWT_SECRET
 		}),
 		MongooseModule.forFeature([
 			{ name: User.name, schema: UserSchema }

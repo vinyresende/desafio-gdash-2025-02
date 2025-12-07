@@ -25,6 +25,6 @@ export class AuthController {
     @UseGuards(AuthGuard)
     @Get('user/profile')
     async userProfile(@Request() request) {
-        return request.user
+        return { user: request.user }
     }
 }
