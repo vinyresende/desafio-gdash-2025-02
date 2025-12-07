@@ -27,7 +27,7 @@ const menuItems: MenuItem[] = [
 ]
 
 export default function AppSidebar() {
-    const { signOut } = useAuthContext()
+    const { userInfo, signOut } = useAuthContext()
 
     return (
         <Sidebar>
@@ -61,8 +61,8 @@ export default function AppSidebar() {
                         />
                     </Avatar>
                     <div className='flex flex-col truncate'>
-                        <span className='truncate'>Username Example</span>
-                        <span className='text-muted-foreground text-sm truncate'>email@example.com</span>
+                        <span className='truncate'>{userInfo?.username}</span>
+                        <span className='text-muted-foreground text-sm truncate'>{userInfo?.email}</span>
                     </div>
                 </div>
                 <SidebarMenuButton
