@@ -10,8 +10,9 @@ import {
 } from '@/components/ui/sidebar'
 import { Avatar, AvatarImage } from '@radix-ui/react-avatar'
 
-import { CloudSun, BookText, type LucideProps, LogOut } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useAuthContext } from '../providers/auth/auth-provider'
+import { CloudSun, BookText, type LucideProps, LogOut } from 'lucide-react'
 
 interface MenuItem {
     title: string
@@ -26,6 +27,8 @@ const menuItems: MenuItem[] = [
 ]
 
 export default function AppSidebar() {
+    const { signOut } = useAuthContext()
+
     return (
         <Sidebar>
             <SidebarHeader className='flex items-center justify-center p-5'>
@@ -65,6 +68,7 @@ export default function AppSidebar() {
                 <SidebarMenuButton
                     className='cursor-pointer flex justify-center gap-2'
                     variant={'outline'}
+                    onClick={() => { signOut() }}
                 >
                     <LogOut /> Logout
                 </SidebarMenuButton>

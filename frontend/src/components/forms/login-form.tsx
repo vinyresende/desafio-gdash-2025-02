@@ -1,12 +1,14 @@
-import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form"
-
 import { z } from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
+import { useForm } from "react-hook-form"
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form"
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
+import { useState } from "react"
 import { Link } from "react-router-dom"
+import { useAuthContext } from "../providers/auth/auth-provider"
 
 const formSchema = z.object({
     email: z.email().min(2).max(50),
@@ -14,6 +16,9 @@ const formSchema = z.object({
 })
 
 export default function LoginForm() {
+    const [error, setError] = useState<string | null>(null)
+    const [isPending, setIsPending] = useState<boolean>(false)
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -22,8 +27,21 @@ export default function LoginForm() {
         }
     })
 
+    const { signIn } = useAuthContext()
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values)
+        if (isPending) return
+        setIsPending(true)
+
+        const res = await signIn(values)
+
+        if (!res.ok) {
+            setError(res.message!)
+            return setIsPending(false)
+        }
+
+        setError(null)
+        return setIsPending(false)
     }
 
     return (
@@ -41,6 +59,12 @@ export default function LoginForm() {
             </CardHeader>
 
             <CardContent>
+                {error && (
+                    <div className="mb-2">
+                        <span className="text-red-400">{error}</span>
+                    </div>
+                )}
+
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div className="flex flex-col gap-3">

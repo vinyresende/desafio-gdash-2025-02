@@ -1,20 +1,25 @@
+import { z } from "zod"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { Link } from "react-router-dom"
+import { useForm } from "react-hook-form"
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form"
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-import { z } from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from "react"
+import { Link } from "react-router-dom"
+import { useAuthContext } from "../providers/auth/auth-provider"
 
 const formSchema = z.object({
     username: z.string().min(2).max(40),
     email: z.email().min(2).max(50),
-    password: z.string().max(50)
+    password: z.string().min(8).max(50)
 })
 
 export default function RegisterForm() {
+    const [error, setError] = useState<string | null>(null)
+    const [isPending, setIsPending] = useState<boolean>(false)
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -23,8 +28,21 @@ export default function RegisterForm() {
         }
     })
 
-    const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values)
+    const { signUp } = useAuthContext()
+
+    const onSubmit = async (values: z.infer<typeof formSchema>): Promise<void> => {
+        if (isPending) return
+        setIsPending(true)
+
+        const res = await signUp(values)
+
+        if (!res.ok) {
+            setError(res.message!)
+            return setIsPending(false)
+        }
+
+        setError(null)
+        return setIsPending(false)
     }
 
     return (
@@ -42,6 +60,12 @@ export default function RegisterForm() {
             </CardHeader>
 
             <CardContent>
+                {error && (
+                    <div className="mb-2">
+                        <span className="text-red-400">{error}</span>
+                    </div>
+                )}
+
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div className="flex flex-col gap-3">
@@ -84,7 +108,7 @@ export default function RegisterForm() {
                                 )}
                             />
 
-                            <Button type="submit" className="cursor-pointer mt-2">Login</Button>
+                            <Button type="submit" className="cursor-pointer mt-2" disabled={isPending}>Register</Button>
                         </div>
                     </form>
                 </Form>
