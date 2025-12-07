@@ -1,27 +1,20 @@
 import { Outlet } from 'react-router-dom'
+import { SidebarProvider } from '@/components/ui/sidebar'
 
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarGroup,
-    SidebarHeader,
-    SidebarProvider
-} from '@/components/ui/sidebar'
+import Header from '../header/header'
+import AppSidebar from '../app-sidebar/app-sidebar'
 
 export default function DashboardLayout() {
     return (
         <SidebarProvider>
-            <Sidebar>
-                <SidebarHeader className='flex items-center justify-center p-5'>
-                    <h1 className='text-xl font-semibold'>GDASH</h1>
-                </SidebarHeader>
-                <SidebarContent>
-                    <SidebarGroup />
-                </SidebarContent>
-            </Sidebar>
+            <AppSidebar />
 
-            <div className='w-full flex flex-col p-8'>
-                <Outlet />
+            <div className='w-full flex flex-col'>
+                <Header />
+
+                <div className='p-5'>
+                    <Outlet />
+                </div>
             </div>
         </SidebarProvider>
     )
