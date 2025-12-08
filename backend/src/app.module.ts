@@ -4,12 +4,14 @@ import { MongooseModule } from '@nestjs/mongoose'
 
 import { DB_URL } from './constants'
 import { WeatherModule } from './weather/weather.module';
+import { PokeModule } from './poke/poke.module';
 
 @Module({
 	imports: [
 		AuthModule,
 		MongooseModule.forRoot(DB_URL),
-		WeatherModule
+		WeatherModule,
+		PokeModule
 	],
 	controllers: [],
 	providers: [],

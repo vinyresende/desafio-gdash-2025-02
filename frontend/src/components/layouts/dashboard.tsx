@@ -9,10 +9,10 @@ export default function DashboardLayout() {
         <SidebarProvider>
             <AppSidebar />
 
-            <div className='w-full flex flex-col'>
+            <div className='w-full h-screen flex flex-col'>
                 <Header />
 
-                <div className='p-5'>
+                <div className='p-5 overflow-y-auto'>
                     <Outlet />
                 </div>
             </div>

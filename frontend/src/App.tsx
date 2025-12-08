@@ -5,6 +5,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 
 // Dashboard pages
 import HomePage from './_pages/(Dashboard)/home/page'
+import PokedexPage from './_pages/(Dashboard)/pokedex/page'
+import SinglePokemonPage from './_pages/(Dashboard)/pokedex/[id]/page'
 
 // Authentication pages
 import LoginPage from './_pages/(Auth)/login/page'
@@ -31,6 +33,8 @@ function App() {
 								<ProtectedRoutes><DashboardLayout /></ProtectedRoutes>
 							}>
 								<Route index element={<HomePage />} />
+								<Route path='/pokedex' element={<PokedexPage />} />
+								<Route path='/pokedex/:id' element={<SinglePokemonPage />} />
 							</Route>
 
 							{/* Authentication Routes */}
