@@ -4,17 +4,34 @@ import { Model } from 'mongoose'
 import { User } from 'src/schemas/User.schema'
 
 import { InjectModel } from '@nestjs/mongoose'
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common'
+import { ConflictException, Injectable, OnModuleInit, UnauthorizedException } from '@nestjs/common'
 
-import { UserSignInDTO, UserSignUpDTO } from './dto/user.dto'
 import { JwtService } from '@nestjs/jwt'
+import { DEFAULT_USER } from 'src/constants'
+import { UserSignInDTO, UserSignUpDTO } from './dto/user.dto'
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnModuleInit {
     constructor(
         @InjectModel(User.name) private userModel: Model<User>,
         private jwtService: JwtService
     ) { }
+
+    async onModuleInit() {
+        await this.createDefaultUserIfNotExists()
+    }
+
+    private async createDefaultUserIfNotExists() {
+        const user = await this.userModel.findOne({ email: DEFAULT_USER.email }).exec()
+
+        if (!user) {
+            const hashedPassword = await bcrypt.hash(DEFAULT_USER.password, 12)
+
+            const defaultAdmin = new this.userModel({ ...DEFAULT_USER, password: hashedPassword })
+
+            await defaultAdmin.save()
+        }
+    }
 
     async signup(data: UserSignUpDTO) {
         const userExists: User | null = await this.userModel.findOne({ email: data.email }).lean()
