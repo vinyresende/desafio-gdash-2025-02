@@ -1,7 +1,8 @@
-import { getPokemon } from "@/_services/pokedex"
-import type { Pokemon } from "@/_services/types"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { getPokemon } from "@/_services/pokedex/pokedex"
+
+import type { Pokemon } from "@/_services/pokedex/types"
 
 export default function SinglePokemonPage() {
     const { id } = useParams()

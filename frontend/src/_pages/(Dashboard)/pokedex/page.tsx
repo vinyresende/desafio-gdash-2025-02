@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
-import { getAllPokemon } from "@/_services/pokedex"
+import { getAllPokemon } from "@/_services/pokedex/pokedex"
 
 import Pagination from "@/components/pagination/pagination"
 
-import type { PokemonListItem } from "@/_services/types"
+import type { PokemonListItem } from "@/_services/pokedex/types"
 import PokemonCard from "@/components/pokemon/pokemon-card"
 
 const ITEMS_PER_PAGE: number = 16
