@@ -1,10 +1,11 @@
+import Pagination from "@/components/pagination/pagination"
+import PokemonCard from "@/components/pokemon/pokemon-card"
+
 import { useEffect, useState } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 import { getAllPokemon } from "@/_services/pokedex/pokedex"
 
-import Pagination from "@/components/pagination/pagination"
-
 import type { PokemonListItem } from "@/_services/pokedex/types"
-import PokemonCard from "@/components/pokemon/pokemon-card"
 
 const ITEMS_PER_PAGE: number = 16
 
@@ -34,13 +35,24 @@ export default function PokedexPage() {
         <main>
             <section className="w-full max-w-7xl mx-auto">
                 <div className="grid grid-cols-4 max-lg:grid-cols-2 gap-3">
+                    {!pokemonList && (
+                        <>
+                            <Skeleton className="w-[311px] h-[262px]" />
+                            <Skeleton className="w-[311px] h-[262px]" />
+                            <Skeleton className="w-[311px] h-[262px]" />
+                            <Skeleton className="w-[311px] h-[262px]" />
+                        </>
+                    )}
+
                     {pokemonList?.map(item => (
                         <PokemonCard key={item.id} info={item} />
                     ))}
                 </div>
 
                 <div className="flex items-center justify-center mt-6">
-                    <Pagination totalPages={totalItems / ITEMS_PER_PAGE} setPage={setPage} currentPage={page} />
+                    {pokemonList && (
+                        <Pagination totalPages={totalItems / ITEMS_PER_PAGE} setPage={setPage} currentPage={page} />
+                    )}
                 </div>
             </section>
         </main>
