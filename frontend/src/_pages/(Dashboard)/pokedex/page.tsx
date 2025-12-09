@@ -4,6 +4,7 @@ import PokemonCard from "@/components/pokemon/pokemon-card"
 import { useEffect, useState } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getAllPokemon } from "@/_services/pokedex/pokedex"
+import { usePageTitleContext } from "@/components/providers/page-title/page-title"
 
 import type { PokemonListItem } from "@/_services/pokedex/types"
 
@@ -14,6 +15,10 @@ export default function PokedexPage() {
 
     const [page, setPage] = useState<number>(1)
     const [totalItems, setTotalItems] = useState<number>(0)
+
+    const { setPageTitle } = usePageTitleContext()
+
+    setPageTitle("Pokedex")
 
     const fetchPokemonList = async () => {
         const offset: number = (page - 1) * ITEMS_PER_PAGE

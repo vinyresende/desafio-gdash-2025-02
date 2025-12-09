@@ -19,36 +19,39 @@ import DashboardLayout from './components/layouts/dashboard'
 // Providers
 import AuthProvider from './components/providers/auth/auth-provider'
 import ProtectedRoutes from './components/providers/auth/protected-routes'
+import PageTitleProvider from './components/providers/page-title/page-title'
 
 function App() {
 	return (
 		<>
-			<AuthProvider>
-				<ThemeProvider defaultTheme='dark'>
-					<BrowserRouter>
-						<Routes>
+			<PageTitleProvider>
+				<AuthProvider>
+					<ThemeProvider defaultTheme='dark'>
+						<BrowserRouter>
+							<Routes>
 
-							{/* Dashboard Routes */}
-							<Route path='/' element={
-								<ProtectedRoutes><DashboardLayout /></ProtectedRoutes>
-							}>
-								<Route index element={<HomePage />} />
-								<Route path='/pokedex' element={<PokedexPage />} />
-								<Route path='/pokedex/:id' element={<SinglePokemonPage />} />
-							</Route>
+								{/* Dashboard Routes */}
+								<Route path='/' element={
+									<ProtectedRoutes><DashboardLayout /></ProtectedRoutes>
+								}>
+									<Route index element={<HomePage />} />
+									<Route path='/pokedex' element={<PokedexPage />} />
+									<Route path='/pokedex/:id' element={<SinglePokemonPage />} />
+								</Route>
 
-							{/* Authentication Routes */}
-							<Route path='/auth' element={
-								<ProtectedRoutes allowAuthenticated={false}><AuthLayout /></ProtectedRoutes>
-							}>
-								<Route index element={<Navigate to="/auth/login" />} />
-								<Route path='/auth/login' element={<LoginPage />} />
-								<Route path='/auth/register' element={<RegisterPage />} />
-							</Route>
-						</Routes>
-					</BrowserRouter>
-				</ThemeProvider>
-			</AuthProvider>
+								{/* Authentication Routes */}
+								<Route path='/auth' element={
+									<ProtectedRoutes allowAuthenticated={false}><AuthLayout /></ProtectedRoutes>
+								}>
+									<Route index element={<Navigate to="/auth/login" />} />
+									<Route path='/auth/login' element={<LoginPage />} />
+									<Route path='/auth/register' element={<RegisterPage />} />
+								</Route>
+							</Routes>
+						</BrowserRouter>
+					</ThemeProvider>
+				</AuthProvider>
+			</PageTitleProvider>
 		</>
 	)
 }

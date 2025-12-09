@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getPokemon } from "@/_services/pokedex/pokedex"
+import { usePageTitleContext } from "@/components/providers/page-title/page-title"
 
 import type { Pokemon } from "@/_services/pokedex/types"
 
@@ -8,6 +9,10 @@ export default function SinglePokemonPage() {
     const { id } = useParams()
 
     const [pokemon, setPokemon] = useState<Pokemon | null>(null)
+
+    const { setPageTitle } = usePageTitleContext()
+
+    setPageTitle(pokemon ? `${pokemon?.name[0].toUpperCase()}${pokemon?.name.slice(1)}` : "Pokedex")
 
     const fetchPokemon = async () => {
         const res = await getPokemon(id || "")
