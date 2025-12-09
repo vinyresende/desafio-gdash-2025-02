@@ -14,3 +14,8 @@ export const DEFAULT_USER: User = {
     email: process.env.DEFAULT_USER_EMAIL || "admin@email.com",
     password: process.env.DEFAULT_USER_PASSWORD || "admin123",
 }
+
+export const GEMINI_API = {
+    API_URL: process.env.GEMINI_API_URL || "",
+    API_KEY: process.env.GEMINI_API_KEY || ""
+}

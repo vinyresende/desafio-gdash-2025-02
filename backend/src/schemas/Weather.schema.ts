@@ -1,5 +1,28 @@
 import { Prop, raw, Schema, SchemaFactory } from "@nestjs/mongoose"
 
+class CurrentWeather {
+    @Prop({ required: true })
+    time: string
+
+    @Prop({ required: true })
+    temperature: number
+
+    @Prop({ required: true })
+    relative_humidity: number
+
+    @Prop({ required: true })
+    apparent_temperature: number
+
+    @Prop({ required: true })
+    wind_speed: number
+
+    @Prop({ required: true })
+    precipitation_probability: number
+
+    @Prop({ required: true })
+    sky_condition: string
+}
+
 @Schema()
 export class Weather {
     @Prop({ required: true })
@@ -11,16 +34,8 @@ export class Weather {
     @Prop({ required: true })
     longitude: number
 
-    @Prop(raw({
-            time: { type: String },
-            temperature: { type: Number },
-            relative_humidity: { type: Number },
-            apparent_temperature: { type: Number },
-            wind_speed: { type: Number },
-            precipitation_probability: { type: Number },
-            sky_condition: { type: String }
-        }))
-    current: Record<string, string>
+    @Prop({ required: true })
+    current: CurrentWeather
 }
 
 export const weatherSchema = SchemaFactory.createForClass(Weather)
