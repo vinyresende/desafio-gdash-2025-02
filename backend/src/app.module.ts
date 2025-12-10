@@ -3,8 +3,8 @@ import { AuthModule } from './auth/auth.module'
 import { MongooseModule } from '@nestjs/mongoose'
 
 import { DB_URL } from './constants'
-import { WeatherModule } from './weather/weather.module';
-import { PokeModule } from './poke/poke.module';
+import { PokeModule } from './poke/poke.module'
+import { WeatherModule } from './weather/weather.module'
 
 @Module({
 	imports: [

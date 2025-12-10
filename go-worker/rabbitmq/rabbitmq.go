@@ -1,6 +1,7 @@
 package rabbitmq
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -75,10 +76,18 @@ func (c *Consumer) Start() error {
 func (c *Consumer) connect() error {
 	var err error
 
-	c.conn, err = amqp.Dial(c.cfg.RabbitMQURL)
+	for {
+		c.conn, err = amqp.Dial(c.cfg.RabbitMQURL)
 
-	if err != nil {
-		return err
+		if err != nil {
+			fmt.Print("Erro ao conectar-se ao RabbitMQ!")
+			fmt.Print("Tentando novamente em 5 segundos...")
+			time.Sleep(5 * time.Second)
+
+			continue
+		}
+
+		break
 	}
 
 	c.channel, err = c.conn.Channel()

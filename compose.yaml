@@ -1,0 +1,98 @@
+services:
+  mongodb:
+    image: mongo
+    expose:
+      - 27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+    ports:
+      - 5173:5173
+    depends_on:
+      - backend
+    volumes:
+      - mongodb_data:/data/mongodb
+
+  backend:
+    build:
+      context: ./backend
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    environment:
+      DB_URL: ${BACK_DB_URL}
+      POKEAPI_URL: ${BACK_POKEAPI_URL}
+
+      API_KEY: ${BACK_API_KEY}
+
+      GEMINI_API_KEY: ${BACK_GEMINI_API_KEY}
+      GEMINI_API_URL: ${BACK_GEMINI_API_URL}
+
+      DEFAULT_USER_USERNAME: ${BACK_DEFAULT_USER_USERNAME}
+      DEFAULT_USER_EMAIL: ${BACK_DEFAULT_USER_EMAIL}
+      DEFAULT_USER_PASSWORD: ${BACK_DEFAULT_USER_PASSWORD}
+
+      JWT_SECRET: ${BACK_JWT_SECRET}
+    depends_on:
+      - mongodb
+
+  go-worker:
+    build:
+      context: ./go-worker
+    environment:
+      RMQ_URL: ${GO_RMQ_URL}
+      RMQ_QUEUE: ${GO_RMQ_QUEUE}
+      RMQ_CONSUMER: ${GO_RMQ_CONSUMER}
+
+      API_URL: ${GO_API_URL}
+      API_KEY: ${GO_API_KEY}
+    depends_on:
+      - backend
+      - rabbitmq
+
+  data-collector:
+    build:
+      context: ./data-collector
+    environment:
+      API_URL: ${DATA_API_URL}
+
+      RMQ_USER: ${DATA_RMQ_USER}
+      RMQ_PASS: ${DATA_RMQ_PASS}
+      RMQ_HOST: ${DATA_RMQ_HOST}
+      RMQ_PORT: ${DATA_RMQ_PORT}
+      RMQ_QUEUE: ${DATA_RMQ_QUEUE}
+
+      CITY_NAME: ${DATA_CITY_NAME}
+      LATITUDE: ${DATA_LATITUDE}
+      LONGITUDE: ${DATA_LONGITUDE}
+      DELAY: ${DATA_DELAY}
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    depends_on:
+      - backend
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RMQ_DEFAULT_PASS}
+    volumes:
+      - rabbitmq_data:/data/rmq
+
+volumes:
+  rabbitmq_data:
+    driver: local
+  mongodb_data:
+    driver: local
